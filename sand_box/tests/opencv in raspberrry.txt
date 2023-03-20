@@ -1,0 +1,169 @@
+Step #2: Install OpenCV 4 dependencies on your Raspberry Pi
+From there, let’s update our system:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo apt-get update && sudo apt-get upgrade
+And then let’s install developer tools including CMake:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo apt-get install build-essential cmake unzip pkg-config
+Next, let’s install a selection of image and video libraries — these are critical to being able to work with image and video files:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo apt-get install libjpeg-dev libpng-dev libtiff-dev
+$ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+$ sudo apt-get install libxvidcore-dev libx264-dev
+From there, let’s install GTK, our GUI backend:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo apt-get install libgtk-3-dev
+And now let’s install a package which may reduce pesky GTK warnings:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo apt-get install libcanberra-gtk*
+The asterisk will grab the ARM specific GTK.
+Followed by installing two packages which contain numerical optimizations for OpenCV:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo apt-get install libatlas-base-dev gfortran
+And finally, let’s install the Python 3 development headers:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo apt-get install python3-dev
+Once you have all of these prerequisites installed you can move on to the next step.
+Step #3: Download OpenCV 4 for your Raspberry Pi
+Our next step is to download OpenCV.
+Let’s navigate to our home folder and download both opencv and opencv_contrib. The contrib repo contains extra modules and functions which we frequently use here on the PyImageSearch blog. You should be installing the OpenCV library with the additional contrib modules as well.
+When you’re ready, just follow along to download both the opencv  and opencv_contrib  code:
+Install OpenCV 4 on your Raspberry Pi
+$ cd ~
+$ wget -O opencv.zip https://github.com/opencv/opencv/archive/4.0.0.zip
+$ wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.0.0.zip
+From there, let’s unzip the archives:
+Install OpenCV 4 on your Raspberry Pi
+$ unzip opencv.zip
+$ unzip opencv_contrib.zip
+I also like to rename the directories:
+Install OpenCV 4 on your Raspberry Pi
+$ mv opencv-4.0.0 opencv
+$ mv opencv_contrib-4.0.0 opencv_contrib
+If you skip renaming the directories, don’t forget to update the CMake paths.
+Now that opencv  and opencv_contrib  are downloaded and ready to go, let’s set up our environment.
+Step #4: Configure your Python 3 virtual environment for OpenCV 4
+Let’s grab and install pip, a Python Package Manager.
+To install pip, simply enter the following in your terminal:
+Install OpenCV 4 on your Raspberry Pi
+$ wget https://bootstrap.pypa.io/get-pip.py
+$ sudo python3 get-pip.py
+Make use of virtual environments for Python development
+If you aren’t familiar with virtual environments, please take a moment look at this article on RealPython or read the first half of the this blog post on PyImageSearch.
+Virtual environments will allow you to run different versions of Python software in isolation on your system. Today we’ll be setting up just one environment, but you could easily have an environment for each project.
+Let’s go ahead and install  virtualenv  and virtualenvwrapper  now — they allow for Python virtual environments:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo pip install virtualenv virtualenvwrapper
+$ sudo rm -rf ~/get-pip.py ~/.cache/pip
+To finish the install of these tools, we need to update our ~/.profile  file (similar to .bashrc  or .bash_profile ).
+Using a terminal text editor such as vi /vim  or nano , add the following lines to your ~/.profile :
+Install OpenCV 4 on your Raspberry Pi
+# virtualenv and virtualenvwrapper
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+source /usr/local/bin/virtualenvwrapper.sh
+Alternatively, you can append the lines directly via bash commands:
+Install OpenCV 4 on your Raspberry Pi
+$ echo -e "n# virtualenv and virtualenvwrapper" >> ~/.profile
+$ echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.profile
+$ echo "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" >> ~/.profile
+$ echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.profile
+Next, source the ~/.profile  file:
+Install OpenCV 4 on your Raspberry Pi
+$ source ~/.profile
+Create a virtual environment to hold OpenCV 4 and additional packages
+Now you’re at the point where you can create your OpenCV 4 + Python 3 virtual environment on your Raspberry Pi:
+Install OpenCV 4 on your Raspberry Pi
+$ mkvirtualenv cv -p python3
+This line simply creates a Python 3 virtual environment named cv .
+You can (and should) name your environment(s) whatever you’d like — I like to keep them short and sweet while also providing enough information so I’ll remember what they are for. For example, I like to name my environments like this:
+py3cv4
+py3cv3
+py2cv2
+etc.
+Let’s verify that we’re in the cv  environment by using the workon  command:
+Install OpenCV 4 on your Raspberry Pi
+$ workon cv
+Install NumPy
+The first Python package and only OpenCV prerequisite we’ll install is NumPy:
+Install OpenCV 4 on your Raspberry Pi
+$ pip install numpy
+We can now prepare OpenCV 4 for compilation on our Raspberry Pi.
+Step #5: CMake and compile OpenCV 4 for your Raspberry Pi
+For this step, we’re going to setup our compile with CMake followed by running make  to actually compile OpenCV. This is the most time-consuming step of today’s blog post.
+Navigate back to your OpenCV repo and create + enter a build  directory:
+Install OpenCV 4 on your Raspberry Pi
+$ cd ~/opencv
+$ mkdir build
+$ cd build
+Run CMake for OpenCV 4
+Now let’s run CMake to configure the OpenCV 4 build:
+Install OpenCV 4 on your Raspberry Pi
+$ cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+    -D ENABLE_NEON=ON \
+    -D ENABLE_VFPV3=ON \
+    -D BUILD_TESTS=OFF \
+    -D OPENCV_ENABLE_NONFREE=ON \
+    -D INSTALL_PYTHON_EXAMPLES=OFF \
+    -D BUILD_EXAMPLES=OFF ..
+Update 2018-11-27: Notice the -D OPENCV_ENABLE_NONFREE=ON  flag. Setting this flag with OpenCV 4 ensures that you’ll have access to SIFT/SURF and other patented algorithms.
+Be sure to update the above command to use the correct OPENCV_EXTRA_MODULES_PATH  path. If you’re following along with this tutorial exactly you should not need to update the path.
+Once CMake is finished, it’s important that you inspect the output. Your output should look similar to mine below:
+Take a second now to ensure that the Interpreter  points to the correct Python 3 binary. Also check that numpy  points to our NumPy package which is installed inside the virtual environment.
+Increase the SWAP on the Raspberry Pi
+Before you begin the compile I would suggest increasing your swap space. This will enable you to compile OpenCV with all four cores of the Raspberry Pi without the compile hanging due to memory exhausting.
+Open up your /etc/dphys-swapfile  file:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo nano /etc/dphys-swapfile
+…and then edit the CONF_SWAPSIZE  variable:
+Install OpenCV 4 on your Raspberry Pi
+# set size to absolute value, leaving empty (default) then uses computed value
+#   you most likely don't want this, unless you have an special disk situation
+# CONF_SWAPSIZE=100
+CONF_SWAPSIZE=2048
+Notice that I’m increasing the swap from 100MB to 2048MB.
+If you do not perform this step it’s very likely that your Pi will hang.
+From there, restart the swap service:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo /etc/init.d/dphys-swapfile stop
+$ sudo /etc/init.d/dphys-swapfile start
+Note: Increasing swap size is a great way to burn out your Raspberry Pi microSD card. Flash-based storage have limited number of writes you can perform until the card is essentially unable to hold the 1’s and 0’s anymore. We’ll only be enabling large swap for a short period of time, so it’s not a big deal. Regardless, be sure to backup your .img  file after installing OpenCV + Python just in case your card dies unexpectedly early. You can read more about large swap sizes corrupting memory cards on this page.
+Compile OpenCV 4
+Now we’re ready to compile OpenCV 4:
+Install OpenCV 4 on your Raspberry Pi
+$ make -j4
+Note: In the make  command above, the -j4  argument specifies that I have 4 cores for compilation. If you have compile errors or your Raspberry Pi hangs/freezes you can try without the -j4  switch which can eliminate race conditions.
+Here you can see OpenCV 4 has compiled without any errors:
+And from there, let’s install OpenCV 4 with two additional commands:
+Install OpenCV 4 on your Raspberry Pi
+$ sudo make install
+$ sudo ldconfig
+Don’t forget to go back to your /etc/dphys-swapfile  file and:
+Reset CONF_SWAPSIZE  to 100MB.
+Restart the swap service.
+Step #6: Link OpenCV 4 into your Python 3 virtual environment
+Let’s create a symbolic link from the OpenCV install in the system site-packages  directory to our virtual environment:
+Install OpenCV 4 on your Raspberry Pi
+$ cd ~/.virtualenvs/cv/lib/python3.5/site-packages/
+$ ln -s /usr/local/python/cv2/python-3.5/cv2.cpython-35m-arm-linux-gnueabihf.so cv2.so
+$ cd ~
+I cannot stress this step enough — this step is critical. If you don’t create a symbolic link, you won’t be able to import OpenCV in your scripts. Also, ensure that the paths and filenames in the above commands are correct for your Raspberry Pi.  I suggest tab-completion.
+Step #7: Test your OpenCV 4 install on your Raspberry Pi
+Let’s do a quick sanity test to see if OpenCV 4 is ready to go.
+Open a terminal and perform the following:
+Install OpenCV 4 on your Raspberry Pi
+$ workon cv
+$ python
+>>> import cv2
+>>> cv2.__version__
+'4.0.0'
+>>> exit()
+The first command activates our virtual environment. Then we run the Python interpreter associated with the environment.
+If you see that you have version 4.0.0 installed, then you’re now fully armed and dangerous + ready to perform computer vision and image processing.
+A Raspberry Pi + OpenCV 4 project to get your feet wet
+A while back, I was working hard on responding to PyImageSearch readers via comments, emails, and Twitter/Facebook/LinkedIn. I make a point of responding to as many incoming questions and comments as I can.
+It was 4:30 in the afternoon and I was cranking away at the keyboard in a “flow” state.
+But while I was typing away, something triggered in my brain that I was thirsty. Very thirsty.
+So I took a quick break from the keyboard and went to the fridge to grab a tasty beer ?.
