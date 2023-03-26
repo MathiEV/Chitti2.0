@@ -7,18 +7,18 @@ import time
 import threading
 
 sys.path.append('../../components')
-from rotation_manager import Rotation_Manager
+from servo_worker import Servo_Worker
 
 def controlRotationBy20(channel):
-    rotation=Rotation_Manager(channel)
+    servo=Servo_Worker(channel)
     for i in range (180,0,-20):
-        rotation.setAngle(i)
+        servo.setAngle(i)
         time.sleep(1)
 
 def controlRotationBy10(channel):
-    rotation=Rotation_Manager(channel)
+    servo=Servo_Worker(channel)
     for i in range (180,0,-10):
-        rotation.setAngle(i)
+        servo.setAngle(i)
         time.sleep(1)
 
 if __name__ == "__main__":

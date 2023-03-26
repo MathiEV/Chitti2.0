@@ -6,10 +6,10 @@ import sys
 import time
 
 sys.path.append('../../components')
-from gpio_manager import GPIO_Manager
+from gpio_worker import GPIO_Worker
 
 def controlGPIO():
-    gpio=GPIO_Manager()
+    gpio=GPIO_Worker()
     while True:                
         gpio.set_gpio(16,True)
         time.sleep(1)
