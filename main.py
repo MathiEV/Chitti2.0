@@ -7,14 +7,14 @@
 import signal
 import sys
 
-from System.mode_monitor import ModeMonitor
+from System.mode_monitor import Mode_Monitor
 
 def signal_handler(_SIGNO, _STACK_FRAME):
     print("Signal Received : Exiting...")
     sys.exit(0)
 
 def main():
-    mode_monitor = ModeMonitor()
+    mode_monitor = Mode_Monitor()
 
     signal.pause()
 

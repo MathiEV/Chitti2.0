@@ -8,17 +8,17 @@ import threading
 import queue
 import time
 
-class ModeMonitor:
+class Mode_Monitor:
 
     def __init__(self):
-        print("ModeMonitor Init Started")
+        print("Mode_Monitor Init Started")
 
         self.__mode_queue = queue.Queue()
         self.__callback_list = []
 
         threading.Thread(target=self.__mode_monitor, daemon=True).start()
 
-        print("ModeMonitor Init Completed")
+        print("Mode_Monitor Init Completed")
 
     def register_mode_monitor_callback(self, callback):
         self.__callback_list.append(callback)
@@ -27,7 +27,7 @@ class ModeMonitor:
         self.__mode_queue.put(mode)
 
     def __mode_monitor(self):
-        print("ModeMonitor Thread Started")
+        print("Mode_Monitor Thread Started")
 
         while True:
             if self.__mode_queue.empty() != True:
