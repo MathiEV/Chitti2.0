@@ -10,21 +10,23 @@ class GPIO_Worker:
     _def_pin_config = {
         5:GPIO.OUT,
         6:GPIO.OUT,    
-        16:GPIO.OUT,
+        13:GPIO.OUT,
         19:GPIO.OUT,
-        20:GPIO.OUT,
-        21:GPIO.IN,
-        23:GPIO.OUT,
-        24:GPIO.OUT,
-        26:GPIO.OUT,
-        25:GPIO.OUT        
+        12:GPIO.IN,
+        20:GPIO.IN,
+        23:GPIO.IN,
+        16:GPIO.OUT,    
+        21:GPIO.OUT,
+        24:GPIO.OUT        
         }
         
-    def __init__(self):
+    def __init__(self):    
         self._logger.logDebug("GPIO worker init started")
         GPIO.setmode(GPIO.BCM)        
         for pin, mode in  self._def_pin_config.items():            
-            GPIO.setup(pin, mode)        
+            GPIO.setup(pin, mode)
+            if GPIO.OUT == mode :
+                GPIO.output(pin, False)
         self._logger.logDebug("GPIO worker init completed")
         
     def set_gpio(self, pin, state):
@@ -32,3 +34,6 @@ class GPIO_Worker:
     
     def get_gpio(self, pin):
         return GPIO.input(pin)
+    
+    def clean_up(self):
+        GPIO.cleanup()

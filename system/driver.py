@@ -1,4 +1,5 @@
-from threading import threading
+import threading
+import time
 from components.vehicle import Vehicle
 from components.ultrasonic_handler import Ultrasonic_Handler
 
@@ -11,14 +12,14 @@ class Driver:
     _flag = True
     
     def __init__(self):
-        self.ultrasonic_handler = ultrasonic_handler()
+        self.ultrasonic_handler = Ultrasonic_Handler()
         self.vehicle = Vehicle()
-        threading.Thread(target=self.drive, daemon=True).start()
+        threading.Thread(target=self.auto_drive_start, daemon=True).start()
         
     def auto_drive_start(self):
-        while (flag) :
+        while (self._flag) :
             object_distance = self.ultrasonic_handler.check_for_obstacles()
-            if (__center_dist <= _ULTRASONIC_THRESHOLD_DIST):
+            if (object_distance[0] <= _ULTRASONIC_THRESHOLD_DIST):
                 self.vehicle.stop()
                 self.__decide_direction(object_distance)
             else :
@@ -27,11 +28,11 @@ class Driver:
                 self.vehicle.stop()
     
     def auto_drive_stop(self):
-        self.flag = False
+        self._flag = False
         self.vehicle.stop()
     
     def __decide_direction(self, object_distance):
-        if ((object_distance[0] <= _ULTRASONIC_THRESHOLD_DIST) && (object_distance[2] <= _ULTRASONIC_THRESHOLD_DIST)):
+        if ((object_distance[0] <= _ULTRASONIC_THRESHOLD_DIST) and (object_distance[2] <= _ULTRASONIC_THRESHOLD_DIST)):
             self.vehicle.move_backward()
             time.sleep(_MOVE_TIMER)
             self.vehicle.stop()
@@ -46,11 +47,11 @@ class Driver:
             
     def manual_drive_forward():
         object_distance = self.ultrasonic_handler.check_for_obstacles()
-            if (__center_dist <= _ULTRASONIC_THRESHOLD_DIST):
-                self.vehicle.stop()
-                return "Cant move further as we have obstrucle"
-            else
-                self.vehicle.move_forward()
+        if (__center_dist <= _ULTRASONIC_THRESHOLD_DIST):
+            self.vehicle.stop()
+            return "Cant move further as we have obstrucle"
+        else:
+            self.vehicle.move_forward()
     
     def manual_drive_backward():
         self.vehicle.move_backward()
