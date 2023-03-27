@@ -5,8 +5,8 @@
 import sys
 import time
 
-sys.path.append('../../components')
-from gpio_worker import GPIO_Worker
+sys.path.append('../../../')
+from components.gpio_worker import GPIO_Worker
 
 def controlGPIO():
     gpio=GPIO_Worker()
