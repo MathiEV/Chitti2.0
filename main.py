@@ -8,6 +8,7 @@ import signal
 import sys
 
 from System.mode_monitor import Mode_Monitor
+from System.alert_manager import Alert_Manager
 
 def signal_handler(_SIGNO, _STACK_FRAME):
     print("Signal Received : Exiting...")
@@ -15,6 +16,7 @@ def signal_handler(_SIGNO, _STACK_FRAME):
 
 def main():
     mode_monitor = Mode_Monitor()
+    alert_manager = Alert_Manager(mode_monitor.update_mode)
 
     signal.pause()
 
