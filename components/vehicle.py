@@ -10,15 +10,15 @@ import time
 from component.gpio_worker import GPIO_Worker
 
 #Motor1 right
-_MOTOR1_IN1_ = 0 
-_MOTOR1_IN2_ = 0
-_MOTOR2_IN1_ = 0
-_MOTOR2_IN2_ = 0
+_MOTOR1_IN1_ = 29 
+_MOTOR1_IN2_ = 31
+_MOTOR2_IN1_ = 33
+_MOTOR2_IN2_ = 35
 
 _SLEEP_TIME = 1
 
 
-class Driver:
+class Vehicle:
        
     def __init__(self):
         gpio = GPIO_Worker()
