@@ -3,8 +3,10 @@
 # SABARISH VIJAYAKUMAR                           #
 ##################################################
 import RPi.GPIO as GPIO
+from application_modules.logger_module import Logger_Module
 
 class GPIO_Worker:
+    _logger = Logger_Module();
     _def_pin_config = {
         5:GPIO.OUT,
         6:GPIO.OUT,    
@@ -19,11 +21,11 @@ class GPIO_Worker:
         }
         
     def __init__(self):
-        print("GPIO worker init started")
+        self._logger.logDebug("GPIO worker init started")
         GPIO.setmode(GPIO.BCM)        
         for pin, mode in  self._def_pin_config.items():            
             GPIO.setup(pin, mode)        
-        print("GPIO worker init completed")
+        self._logger.logDebug("GPIO worker init completed")
         
     def set_gpio(self, pin, state):
         GPIO.output(pin,state)

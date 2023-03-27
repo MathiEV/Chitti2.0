@@ -8,6 +8,7 @@ import time
 import threading
 
 from ultrasonic import Ultrasonic
+from application_modules.logger_module import Logger_Module
 
 _ULTRASONIC_1_GPIO_TRIG = 16
 _ULTRASONIC_2_GPIO_TRIG = 0 
@@ -21,6 +22,7 @@ _ULTRASONIC_THRESHOLD_DIST = 30 #distance in cms
 _ULTRASONIC_SENS_DELAY = 0.1
 
 class Ultrasonic_Handler:
+    _logger = Logger_Module();
     def __init__(self):
         self.enter = True
         self.__ultrasonic1 = Ultrasonic(_ULTRASONIC_1_GPIO_TRIG, _ULTRASONIC_1_GPIO_ECHO)
@@ -37,7 +39,7 @@ class Ultrasonic_Handler:
             __left_dist = self.__ultrasonic2.get_distance_in_cm()
             __right_dist = self.__ultrasonic3.get_distance_in_cm()
             
-            print(__center_dist, __left_dist, __right_dist)
+            self._logger.logDebug(__center_dist, __left_dist, __right_dist)
             
             if (__center_dist <= _ULTRASONIC_THRESHOLD_DIST):
 
@@ -57,7 +59,7 @@ class Ultrasonic_Handler:
             
             time.sleep(_ULTRASONIC_SENS_DELAY)
 
-            print(object_details[0], object_details[0], object_details[0])
+            self._logger.logDebug(object_details[0], object_details[0], object_details[0])
 
             return object_details
         
