@@ -12,7 +12,6 @@ gpio = GPIO_Worker()
 driver = Driver()
 
 def signal_handler(_SIGNO, _STACK_FRAME):
-    logger.logDebug("Signal Received : Exiting...")
     gpio.clean_up()
     sys.exit(0)
 

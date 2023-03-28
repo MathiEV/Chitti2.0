@@ -15,7 +15,7 @@ _MOTOR1_IN2_ = 6
 _MOTOR2_IN1_ = 19
 _MOTOR2_IN2_ = 13
 
-_SLEEP_TIME = 1
+_SLEEP_TIME = 0.25
 
 
 class Vehicle:

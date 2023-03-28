@@ -36,4 +36,7 @@ class GPIO_Worker:
         return GPIO.input(pin)
     
     def clean_up(self):
+        for pin, mode in  self._def_pin_config.items():            
+            if GPIO.OUT == mode :
+                GPIO.output(pin, False)
         GPIO.cleanup()
