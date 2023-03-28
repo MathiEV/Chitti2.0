@@ -13,6 +13,7 @@ from system.mode_monitor import Mode_Monitor
 from system.alert_manager import Alert_Manager
 from system.face_recognizer import Face_Recognizer
 from system.driver import Driver
+from system.entertainer import Entertainer
 from system.telegram_module import start_telegram_service
 from system.communication_manager import __communication_manager_init__ 
 
@@ -53,8 +54,9 @@ def main():
     alert_manager = Alert_Manager(gpio_worker, mode_monitor.update_mode)
     face_recognizer = Face_Recognizer(mode_monitor, alert_manager)
     driver = Driver(mode_monitor)
+    entertainer = Entertainer(mode_monitor, gpio_worker)
 
-    __communication_manager_init__(mode_monitor, alert_manager, driver)
+    __communication_manager_init__(mode_monitor, alert_manager, driver, entertainer)
 
     threading.Thread(target=start_telegram_service, daemon=True).start()
 
