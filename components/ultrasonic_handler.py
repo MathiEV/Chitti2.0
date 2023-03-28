@@ -10,12 +10,16 @@ import threading
 from components.ultrasonic import Ultrasonic
 from application_modules.logger_module import Logger_Module
 
+#center
 _ULTRASONIC_1_GPIO_TRIG = 24
-_ULTRASONIC_2_GPIO_TRIG = 21
-_ULTRASONIC_3_GPIO_TRIG = 16
-
 _ULTRASONIC_1_GPIO_ECHO = 23
+
+#left side
+_ULTRASONIC_2_GPIO_TRIG = 21
 _ULTRASONIC_2_GPIO_ECHO = 20
+
+#right
+_ULTRASONIC_3_GPIO_TRIG = 16
 _ULTRASONIC_3_GPIO_ECHO = 12
     
 _ULTRASONIC_SENS_DELAY = 0.1
@@ -42,7 +46,7 @@ class Ultrasonic_Handler:
         
         time.sleep(_ULTRASONIC_SENS_DELAY)
 
-        print( "Position read for center distance : '" + str(object_details[0]) + " left distance : '" +  str(object_details[0]) + "right distnace : '"+ str(object_details[0]) + "'")
+        print( "Position read for right distnace : '"+ str(object_details[0]) + "'  center distance : '"+ str(object_details[1]) + "' left distance : '" +  str(object_details[2]))
 
         return object_details
         
