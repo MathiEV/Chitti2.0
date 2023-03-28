@@ -13,43 +13,50 @@ class Driver:
     
     _flag = True
     _logger = Logger_Module()
-    def __init__(self, mode_monitor, alert_manager):
-        self._logger.logInfo("Driver Init Started")
+    def __init__(self, mode_monitor):
+        print("Driver Init Started")
         self.__mode_monitor = mode_monitor
-        self.__alert_manager = alert_manager      
+        #self.__alert_manager = alert_manager      
         self.ultrasonic_handler = Ultrasonic_Handler()
         self.vehicle = Vehicle()
-        
-        self.__Manual_com_queue = queue.Queue()
-        
-        
+        self.__Manual_com_queue = queue.Queue()              
         self.__mode = self.__mode_monitor.get_mode()
-        self.__mode_monitor.register_mode_monitor_callback(self.mode_callback)
-       
+        self.__mode_monitor.register_mode_monitor_callback(self.mode_callback1)       
         threading.Thread(target=self.__drive_thread, daemon=True).start()
-    
-    def mode_callback(self, mode):
-        self.__mode = mode    
+        print("Driver init exit")
+            
+    def mode_callback1(self, mode):
+        self.__mode = mode
+        print("mode callback executed",self.__mode)    
     
     def com_callback(self, direction):
         self.__Manual_com_queue.put(direction)    
     
-    def __drive_thread(self, mode):
-        self._logger.logInfo("Drive Thread Started")
+    def __drive_thread(self):
+        print("Drive Thread Started")
+        #self._logger.logInfo("Drive Thread Started")
+        print("mode=",self.__mode)
         while True:
             if self.__mode == comm_def._GUEST_MODE:
                 self.auto_drive_start()
+                print("entered guest mode")
             elif self.__mode == comm_def._SECURITY_MODE:
                 self.auto_drive_start()
+                print("security mode")
             elif self.__mode == comm_def._MANUAL_MODE:
-                if self.__Manual_com_queue.empty() != True:
-                    direction = self.__Manual_com_queue.get()
-                    self.__manual_mode(direction)
-            elif self.__mode == comm_def._FUN_MODE :
+                #if self.__Manual_com_queue.empty() != True:
+                #    direction = self.__Manual_com_queue.get()
+                #    self.__manual_mode(direction)
+                print("Manual mode")
+            elif self.__mode == comm_def._FUN_MODE:
+                print("entered fun mode")
                 self.vehicle.stop()
+                time.sleep(0.2)#Delay added to avoid thread crash
             else:
                 self._logger.logInfo("No Valid Mode set")
-                self.vehicle.stop()       
+                print("no valid mode set")
+                self.vehicle.stop()
+                time.sleep(0.2)#Delay added to avoid thread crash                
     
     def auto_drive_start(self):
         #while (self._flag) :
