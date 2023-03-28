@@ -2,7 +2,7 @@
 # Import necessary libraries.  
 from Bluetin_Echo import Echo    
 # Define GPIO pin constants.  
-TRIGGER_PIN = 16  
+TRIGGER_PIN =  16
 ECHO_PIN = 12  
 # Initialise Sensor with pins, speed of sound.  
 speed_of_sound = 315  
