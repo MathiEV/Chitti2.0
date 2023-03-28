@@ -10,6 +10,10 @@ from datetime import datetime
 
 from system.mode_monitor import Mode_Monitor
 from system.alert_manager import Alert_Manager
+from system.face_recognizer import Face_Recognizer
+
+from components.gpio_worker import GPIO_Worker
+
 from application_modules.logger_module import Logger_Module
 from application_modules.path_module import Path_Module
 
@@ -39,9 +43,12 @@ def configureWorkingDirectory():
 
 def main():
     configureWorkingDirectory()
-    configureLogger()    
+    configureLogger()
+
+    gpio_worker = GPIO_Worker()
     mode_monitor = Mode_Monitor()
-    alert_manager = Alert_Manager(mode_monitor.update_mode)
+    alert_manager = Alert_Manager(gpio_worker, mode_monitor.update_mode)
+    face_recognizer = Face_Recognizer(mode_monitor, alert_manager)
 
     signal.pause()
 

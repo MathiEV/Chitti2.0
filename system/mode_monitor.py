@@ -9,14 +9,16 @@ import queue
 import time
 
 from application_modules.logger_module import Logger_Module
+import common.common_definitions as comm_def
 
 class Mode_Monitor:
-    _logger = Logger_Module();
+    _logger = Logger_Module()
     def __init__(self):
         self._logger.logInfo("Mode_Monitor Init Started")
 
         self.__mode_queue = queue.Queue()
         self.__callback_list = []
+        self.mode = comm_def._GUEST_MODE
 
         threading.Thread(target=self.__mode_monitor, daemon=True).start()
 
@@ -27,6 +29,9 @@ class Mode_Monitor:
 
     def update_mode(self, mode):
         self.__mode_queue.put(mode)
+
+    def get_mode(self):
+        return self.mode
 
     def __mode_monitor(self):
         self._logger.logInfo("Mode_Monitor Thread Started")
