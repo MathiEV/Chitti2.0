@@ -22,16 +22,20 @@ def signal_handler(_SIGNO, _STACK_FRAME):
     sys.exit(0)
     
   
-
 def main():
 	face_expression = Face_Expressions()
+	
+	time.sleep(2)
+	face_expression.set_expression_angry()
 	time.sleep(2)
 	face_expression.set_expression_smile()
 	time.sleep(2)
 	face_expression.set_expression_sad()
 	time.sleep(2)
-	face_expression.set_expression_angry()
-	
+	face_expression.set_pan_angle(85)
+	time.sleep(2)
+	face_expression.set_tilt_angle(135)
+	time.sleep(2)
 
 
 if __name__ == "__main__":
