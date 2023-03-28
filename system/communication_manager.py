@@ -10,13 +10,16 @@ _PUBLIC_KEY = '-928569638'
 
 __callback_list = {}
 
-def __communication_manager_init__(mode_monitor, alert_manager, driver):
+def __communication_manager_init__(mode_monitor, alert_manager, driver, entertainer):
     global __mode_monitor
     global __alert_manager
     global __driver
+    global __entertainer
+    
     __mode_monitor = mode_monitor
     __alert_manager = alert_manager
     __driver = driver
+    __entertainer = entertainer
 
 def register_send_alert_callback(callback):
     global __send_alert_callback
@@ -32,9 +35,9 @@ def register_communication_callback(topic, callback):
 
 def control_movement(direction:str):
     __driver.com_callback(direction)
-    print("2" + direction)
         
-def fun_movement(message:str):
+def fun_movement(direction:str):
+    __entertainer.entertainer_callback(direction)
     print(message)
 
 def change_mode(mode:str):

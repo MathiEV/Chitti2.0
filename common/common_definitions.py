@@ -6,6 +6,7 @@
 
 #Pins
 _LED = 26
+_LASER = 25
 
 #Mode_Monitor
 _MODES = "Modes"

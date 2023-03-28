@@ -37,5 +37,5 @@ if __name__ == "__main__":
     mode_monitor.update_mode(comm_def._FUN_MODE)
     time.sleep(5)
     
-    #drive_motor()
-motor()
+    drive_motor()
+
