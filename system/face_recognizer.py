@@ -7,6 +7,8 @@
 import threading
 import time
 import cv2
+import os
+import tempfile
 import numpy as np
 
 _CAMERA_NO = 0
@@ -27,12 +29,13 @@ class Face_Recognizer:
         self.__mode_monitor = mode_monitor
         self.__alert_manager = alert_manager
 
-        self.__faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        self.__faceDetect = cv2.CascadeClassifier(r"E:\Embedded\MicroController\Raspberry\Projects\Chitti_2.0\Chitti2.0\system\haarcascade_frontalface_default.xml")
         self.__camera = cv2.VideoCapture(_CAMERA_NO)
         self.__face_recog = cv2.face.LBPHFaceRecognizer_create()
-        self.__face_recog.read('trainningData.yml')
+        self.__face_recog.read(r"E:\Embedded\MicroController\Raspberry\Projects\Chitti_2.0\Chitti2.0\system\trainningData.yml")
         self.__id = 0
         self.is_alert_detected = 0
+        self.__max_unknown_face_couner = 15
 
         self.__mode = self.__mode_monitor.get_mode()
         self.__mode_monitor.register_mode_monitor_callback(self.mode_callback)
@@ -45,17 +48,17 @@ class Face_Recognizer:
         self.__mode = mode
 
     def alert_callback(self, alert_handle):
-        if alert_handle[0] == comm_def._RESET:
-            self.is_alert_detected = 0
+        self.is_alert_detected = 0
+        print("face reset")
+        #if alert_handle[0] == comm_def._RESET:
 
     def __face_recognizer(self):
         self._logger.logInfo("Face_Recognizer Thread Started")
         __unknown_face_counter = 0
 
         while True:
+            ret, __frame = self.__camera.read()
             if self.__mode == comm_def._SECURITY_MODE:
-                ret, __frame = self.__camera.read()
-
                 if ret == True:
                     __gray_frame = cv2.cvtColor(__frame, cv2.COLOR_BGR2GRAY)
                     faces = self.__faceDetect.detectMultiScale(__gray_frame, 1.3, 5)
@@ -78,9 +81,20 @@ class Face_Recognizer:
                             __green = 0
                             __red = 255
 
-                        if __unknown_face_counter >= 10:
+                        if self.is_alert_detected == 1:
+                            self.__max_unknown_face_couner = 50
+                        else:
+                            self.__max_unknown_face_couner = 15
+
+                        if __unknown_face_counter >= self.__max_unknown_face_couner:
                             self.is_alert_detected = 1
-                            self.__alert_manager.set_alert(comm_def._ALERT, "Unknow Person Detected")
+
+                            path = tempfile.gettempdir()
+                            img = path + "/unknown.jpg" 
+                            cv2.imwrite(img, __frame)
+
+                            self.__alert_manager.set_alert(comm_def._ALERT_2, "Alert : Unknown Person Detected !!!")
+                            self.__alert_manager.set_alert(comm_def._ALERT_1, img)
                         
                         __font = cv2.FONT_HERSHEY_COMPLEX_SMALL
                         
@@ -89,7 +103,4 @@ class Face_Recognizer:
                     if cv2.waitKey(10)==ord('q'):
                         break
 
-            if self.is_alert_detected == 1:
-                time.sleep(10)
-            else:
-                time.sleep(0.2)
+            time.sleep(0.2)

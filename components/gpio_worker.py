@@ -17,7 +17,8 @@ class GPIO_Worker:
         23:GPIO.IN,
         16:GPIO.OUT,    
         21:GPIO.OUT,
-        24:GPIO.OUT        
+        24:GPIO.OUT,
+        25:GPIO.OUT     
         }
         
     def __init__(self):    

@@ -4,6 +4,7 @@
 @Date: 26.03.2023
 """
 import signal
+import threading
 import sys
 import os
 from datetime import datetime
@@ -11,6 +12,9 @@ from datetime import datetime
 from system.mode_monitor import Mode_Monitor
 from system.alert_manager import Alert_Manager
 from system.face_recognizer import Face_Recognizer
+from system.driver import Driver
+from system.telegram_module import start_telegram_service
+from system.communication_manager import __communication_manager_init__ 
 
 from components.gpio_worker import GPIO_Worker
 
@@ -32,7 +36,6 @@ def _constructLogFilePath():
     return logFilePath
 
 def configureLogger():
-    
     filePath = _constructLogFilePath()
     logger.configure(filePath,"critical")
     
@@ -49,6 +52,11 @@ def main():
     mode_monitor = Mode_Monitor()
     alert_manager = Alert_Manager(gpio_worker, mode_monitor.update_mode)
     face_recognizer = Face_Recognizer(mode_monitor, alert_manager)
+    driver = Driver(mode_monitor)
+
+    __communication_manager_init__(mode_monitor, alert_manager, driver)
+
+    threading.Thread(target=start_telegram_service, daemon=True).start()
 
     signal.pause()
 

@@ -44,9 +44,9 @@ class Driver:
                 self.auto_drive_start()
                 print("security mode")
             elif self.__mode == comm_def._MANUAL_MODE:
-                #if self.__Manual_com_queue.empty() != True:
-                #    direction = self.__Manual_com_queue.get()
-                #    self.__manual_mode(direction)
+                if self.__Manual_com_queue.empty() != True:
+                   direction = self.__Manual_com_queue.get()
+                   self.__manual_mode(direction)
                 print("Manual mode")
             elif self.__mode == comm_def._FUN_MODE:
                 print("entered fun mode")
@@ -91,13 +91,13 @@ class Driver:
             
     def __manual_mode(self,direction):
         if direction == comm_def._CONTROL_LEFT:
-            manual_drive_left()
+            self.manual_drive_left()
         elif direction == comm_def._CONTROL_RIGHT:
-            manual_drive_right()   
+            self.manual_drive_right()   
         elif direction == comm_def._CONTROL_FORWORD:
-            manual_drive_forward()
+            self.manual_drive_forward()
         elif direction == comm_def._CONTROL_BACKWORD:
-            manual_drive_backward()
+            self.manual_drive_backward()
         
         
             

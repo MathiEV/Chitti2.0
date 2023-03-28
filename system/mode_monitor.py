@@ -27,8 +27,9 @@ class Mode_Monitor:
     def register_mode_monitor_callback(self, callback):
         self.__callback_list.append(callback)
 
-    def update_mode(self, mode):
+    def update_mode(self, mode:str):
         self.__mode_queue.put(mode)
+        print("changeMode" + mode)
 
     def get_mode(self):
         return self.mode
